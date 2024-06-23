@@ -1,36 +1,152 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Next.js MongoDB Material-UI Auth Starter Kit
+
+This is a starter kit for building authentication features with Next.js, MongoDB, and Material-UI. It provides a boilerplate for user registration and login functionality.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
+- Node.js (>= 14.x.x)
+- npm (>= 6.x.x) or yarn (>= 1.x.x)
+- MongoDB (MongoDB Atlas or local MongoDB instance)
+
+### Installation
+
+1. Clone the repository:
+
+    ```sh
+    git clone https://github.com/ramsegev/nextjs-mongodb-materialui-auth-starterkit.git
+    cd nextjs-mongodb-materialui-auth-starterkit
+    ```
+
+2. Install the dependencies:
+
+    ```sh
+    npm install
+    ```
+
+3. Create a `.env.local` file in the root directory and add your MongoDB connection string:
+
+   **`.env.local`**
+
+    ```plaintext
+    MONGODB_URI=your_mongodb_connection_string_here
+    ```
+
+### Running the Development Server
+
+To run the development server:
+
+```sh
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Running Cypress Tests
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+#### To run Cypress tests:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1) Open Cypress test runner:
 
-## Learn More
+```sh
+npm run cypress:open
+```
 
-To learn more about Next.js, take a look at the following resources:
+2) Alternatively, to run Cypress tests in headless mode:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```sh
+npm run cypress:run
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Code Coverage
+To generate code coverage reports for your Cypress tests:
 
-## Deploy on Vercel
+Install the dependencies for code coverage:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```sh
+npm install @cypress/code-coverage babel-plugin-istanbul --save-dev
+```
+Add the following configuration to your babel.config.js file:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+#### babel.config.js
+```
+module.exports = {
+presets: ['next/babel'],
+plugins: ['istanbul'],
+};
+```
+
+Update your cypress/plugins/index.js to include code coverage:
+
+#### cypress/plugins/index.js
+```
+const codeCoverageTask = require('@cypress/code-coverage/task');
+
+module.exports = (on, config) => {
+codeCoverageTask(on, config);
+return config;
+};
+```
+
+Add the following to your cypress/support/index.js to include code coverage support:
+
+#### cypress/support/index.js
+```
+import '@cypress/code-coverage/support';
+```
+Run your Cypress tests in headless mode to generate the coverage report:
+
+```sh
+npm run cypress:run
+```
+The coverage report will be generated in the coverage folder.
+
+## Project Structure
+```
+nextjs-mongodb-materialui-auth-starterkit/
+├── .env.local
+├── cypress/
+│   ├── integration/
+│   │   └── auth.spec.ts
+│   ├── support/
+│   │   ├── commands.ts
+│   │   └── index.ts
+│   └── tsconfig.json
+├── public/
+│   ├── favicon.ico
+│   ├── logo192.png
+│   ├── logo512.png
+│   └── manifest.json
+├── src/
+│   ├── components/
+│   │   ├── Auth/
+│   │   │   ├── Login.tsx
+│   │   │   ├── Register.tsx
+│   │   └── Layout/
+│   │       ├── Header.tsx
+│   │       ├── Footer.tsx
+│   │       └── Layout.tsx
+│   ├── contexts/
+│   │   └── AuthContext.tsx
+│   ├── pages/
+│   │   ├── api/
+│   │   │   ├── auth/
+│   │   │   │   ├── login.ts
+│   │   │   │   └── register.ts
+│   │   ├── _app.tsx
+│   │   ├── index.tsx
+│   │   ├── login.tsx
+│   │   └── register.tsx
+│   ├── styles/
+│   │   ├── globals.css
+│   │   └── theme.ts
+│   ├── utils/
+│   │   └── db.ts
+│   └── next-env.d.ts
+├── .gitignore
+├── babel.config.js
+├── global.d.ts
+├── jest.config.js
+├── package.json
+├── README.md
+└── tsconfig.json
+```
